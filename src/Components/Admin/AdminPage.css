@@ -1,0 +1,61 @@
+/* General styles */
+ body {
+    margin: 0;
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  h1, h2 {
+    margin-bottom: 15px;
+  }
+  
+  
+   .ant-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .ant-table thead tr th {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .ant-table tbody tr td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  } 
+
+  /* AdminPage.css */
+
+/* .container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #38b4da;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+} */
+
+  

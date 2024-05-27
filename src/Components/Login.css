@@ -1,9 +1,9 @@
 /* Login.css */
 
-.login-container {
+ .login-containerl {
     max-width: 400px;
     margin: 100px auto;
-    padding: 20px;
+    padding: 30px;
     border: 1px solid #ccc;
     border-radius: 5px;
     text-align: center;
@@ -11,23 +11,24 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   
-  .login-container h2 {
+  .login-containerl h2 {
     margin-bottom: 20px;
     color: #333;
   }
   
-  .input-group {
+  .input-groupl {
     margin-bottom: 20px;
     text-align: left;
   }
   
-  .input-group label {
+  .input-groupl label {
     display: block;
     margin-bottom: 5px;
     color: #333;
+    
   }
   
-  .input-group input {
+  .input-groupl input {
     width: 100%;
     padding: 8px;
     font-size: 16px;
@@ -55,3 +56,5 @@
     color: #ff0000;
     margin-top: 10px;
   }
+
+  

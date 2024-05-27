@@ -1,27 +1,42 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import {Link,useNavigate } from 'react-router-dom'; // Import useNavigate
 import './Login.css'; // Import CSS for styling
+import axios from 'axios';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate(); // Use useNavigate hook
 
-  const handleLogin = () => {
-    // Validate username and password
-    // For demo purposes, let's assume validation passes
-    // Replace the conditional statement with actual validation logic
+  const handleLogin = (event) => {
+    event.preventDefault();
+    setError(''); // Clear any previous errors
 
-    // Redirect to dashboard if validation passes
-    navigate('/'); // Use navigate function to redirect
-    alert("Login Successfully..")
-  };
+    axios.post('http://localhost:8081/user2', { username, password })
+    .then(res => {
+        if(res.data.success){
+      console.log("User login successful");
+      navigate('/Header'); 
+        }// Redirect to user dashboard
+        else {
+          console.log("failed");
+          setError('Invalid username or password');
+        }
+    })
+    .catch(err => {
+    console.error('Error during login:', err);
+        setError('An error occurred. Please try again later.');
+      });
+  };   
+
+ 
 
   return (
-    <div className="login-container">
+    <div className="login-containerl">
       <h2>House Rental</h2>
-      <form onSubmit={handleLogin}>
-        <div className="input-group">
+      <form>
+        <div className="input-groupl">
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -31,7 +46,7 @@ const Login = () => {
             required
           />
         </div>
-        <div className="input-group">
+        <div className="input-groupl">
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -41,10 +56,20 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <div className="button-groupl">
+          <button type="submit" onClick={handleLogin}>Login</button>
+          
+          <Link to="/Adminlogin"><a href="#">Admin</a></Link>
+          
+        </div>
+        <div className="signup-groupl">
+          <p>Don't have an account?</p>
+          <Link to="/signup"><button type="button">Sign Up</button></Link>
+        </div>
+        
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Login;
