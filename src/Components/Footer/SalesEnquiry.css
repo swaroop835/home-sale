@@ -1,0 +1,49 @@
+.sales-enquiry-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.sales-enquiry-header {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.sales-enquiry-table {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sales-enquiry-table th,
+.sales-enquiry-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.sales-enquiry-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.sales-enquiry-table td {
+  border-top: 1px solid #ddd;
+}
+
+.district {
+  color: #333;
+}
+
+.address {
+  color: #333;
+}
+
+.phone-number {
+  color: #007bff;
+}
+
+.email {
+  color: #007bff;
+}

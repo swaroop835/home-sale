@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Table,message } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Table, Modal } from "antd";
+import axios from "axios";
 
 const Userlisting = () => {
   const [users, setUsers] = useState([]);
@@ -7,22 +8,47 @@ const Userlisting = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8081/user'); // Replace with your API endpoint
-        const data = await response.json();
+        const response = await axios.get("http://localhost:8081/userlisting");
+        const data = response.data;
         setUsers(data);
       } catch (error) {
-        console.error('Error fetching users:', error);
-        message.error('Failed to fetch users');
+        console.error("Error fetching users:", error);
+        // You can optionally handle errors here, e.g., display an error message to the user
       }
     };
 
     fetchUsers();
   }, []);
 
+  const handleDelete = async (email) => {
+    try {
+      const response = await axios.delete("http://localhost:8081/userlisting/${email}");
+
+      if (response.status === 200) {
+        const updatedUsers = users.filter((user) => user.email !== email);
+        setUsers(updatedUsers);
+        // Consider adding success handling here, e.g., console.log("User deleted successfully")
+      } else {
+        // Handle potential errors from the server, e.g., console.error("Failed to delete user")
+      }
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      // Handle errors during deletion, e.g., network issues
+    }
+  };
+
   const userColumns = [
-    { title: 'Username', dataIndex: 'username', key: 'username' },
-    { title: 'Email', dataIndex: 'email', key: 'email' },
-    // Add more columns for user data as needed
+    { title: "Username", dataIndex: "username", key: "username" },
+    { title: "Email", dataIndex: "email", key: "email" },
+    { title: "Phone No", dataIndex: "phoneno", key: "phoneno" },
+    {
+      title: "Action",
+      dataIndex: "",
+      key: "action",
+      render: (record) => (
+        <button onClick={() => handleDelete(record.email)}>Delete</button>
+      ),
+    },
   ];
 
   return (

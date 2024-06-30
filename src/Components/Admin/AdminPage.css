@@ -1,61 +1,45 @@
-/* General styles */
- body {
-    margin: 0;
+.admin-page{
+    background-color: #ffffff;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .admin-container {
+    width: 400px;
+    margin: 20px auto;
     padding: 20px;
-    font-family: sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: center;
   }
   
-  h1, h2 {
-    margin-bottom: 15px;
+  .admin-container h1 {
+    color: #333;
+    margin-bottom: 20px;
   }
   
-  
-   .ant-table {
-    width: 100%;
-    border-collapse: collapse;
+  .admin-container h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
   }
   
-  .ant-table thead tr th {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border: 1px solid #ddd;
+  .admin-container a {
+    display: block;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #669cd5;
+    color: #fff;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
   }
   
-  .ant-table tbody tr td {
-    padding: 10px;
-    border: 1px solid #ddd;
-  } 
-
-  /* AdminPage.css */
-
-/* .container {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-h1 {
-  margin-bottom: 30px;
-}
-
-h2 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-a {
-  color: #38b4da;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-a:hover {
-  text-decoration: underline;
-} */
-
+  .admin-container a:hover {
+    background-color: #0056b3;
+  }
   

@@ -1,109 +1,133 @@
-import React, { useState } from 'react';
+// src/AddPropertyForm.js
+import React, { useState } from "react";
+import axios from 'axios';
 import './AddProperty.css';
 
-const PropertyForm = ({ onSubmit, initialValues = {} }) => {
-  const [propertyDetails, setPropertyDetails] = useState(initialValues);
-  const [imageFile, setImageFile] = useState(null); // State to store the uploaded image file
+const AddProperty = () => {
+  const [formData, setFormData] = useState({
+    place: "",
+    tc_no: "",
+    type: "apartment",
+    bedrooms: "",
+    bathrooms: "",
+    description: "",
+    photo: null,
+  });
 
-  const handleChange = (event) => {
-    setPropertyDetails({
-      ...propertyDetails,
-      [event.target.name]: event.target.value,
-    });
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'photo') {
+      setFormData({
+        ...formData,
+        photo: files[0]
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
-  const handleImageUpload = (event) => {
-    const uploadedFile = event.target.files[0];
-    setImageFile(uploadedFile); // Update state with the uploaded file
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/addproperty', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('Success:', response.data);
+      // Handle success, e.g., show a success message or redirect
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle error, e.g., show an error message
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSubmit({ ...propertyDetails, image: imageFile }); // Include the image file in the submitted data
-  };
+  
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add Property Details</h2>
-      <div className="form-group">
-        <label htmlFor="address">Address:</label>
+    <form onSubmit={handleSubmit} className="page-container">
+      <div>
+        <label>Place:</label>
         <input
           type="text"
-          id="address"
-          name="address"
-          value={propertyDetails.address || ''}
+          name="place"
+          value={formData.place}
           onChange={handleChange}
           required
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="type">Type:</label>
-        <select id="type" name="type" value={propertyDetails.type || ''} onChange={handleChange} required>
-          <option value="">Select Type</option>
+      <div>
+        <label>TC No:</label>
+        <input
+          type="text"
+          name="tc_no"
+          value={formData.tc_no}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label>Type:</label>
+        <select
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          required
+        >
           <option value="apartment">Apartment</option>
           <option value="house">House</option>
-          <option value="land">Land</option>
-          {/* Add more options as needed */}
+          <option value="villa">Villa</option>
         </select>
       </div>
-      <div className="form-group">
-        <label htmlFor="bedrooms">Bedrooms:</label>
+      <div>
+        <label>Number of Bedrooms:</label>
         <input
           type="number"
-          id="bedrooms"
           name="bedrooms"
-          value={propertyDetails.bedrooms || 0}
+          value={formData.bedrooms}
           onChange={handleChange}
           required
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="bathrooms">Bathrooms:</label>
+      <div>
+        <label>Number of Bathrooms:</label>
         <input
           type="number"
-          id="bathrooms"
           name="bathrooms"
-          value={propertyDetails.bathrooms || 0}
+          value={formData.bathrooms}
           onChange={handleChange}
           required
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="description">Description:</label>
+      <div>
+        <label>Description:</label>
         <textarea
-          id="description"
           name="description"
-          value={propertyDetails.description || ''}
+          value={formData.description}
           onChange={handleChange}
+          required
         />
       </div>
-      {/* Photo upload section */}
-      <div className="form-group">
-        <label htmlFor="photo">House Photo (Click and Drop):</label>
+      <div>
+        <label>Photo:</label>
         <input
           type="file"
-          id="photo"
           name="photo"
-          accept="image/*" // Accept only image files
-          onChange={handleImageUpload}
+          accept="image/*"
+          onChange={handleChange}
+          required
         />
       </div>
       <button type="submit">Add Property</button>
     </form>
-  );
-};
-
-const AddProperty = () => {
-  const handleSubmit = (propertyDetails) => {
-    // Handle form submission logic here, e.g., sending data to a server
-    console.log('Submitted property details:', propertyDetails);
-  };
-
-  return (
-    <div className="page-container">
-      <h1>Add Property</h1>
-      <PropertyForm onSubmit={handleSubmit} />
-    </div>
   );
 };
 

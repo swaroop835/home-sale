@@ -1,35 +1,38 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import '../Login.css'; // Import CSS for styling
+import { useNavigate } from 'react-router-dom';
+import './Adminlogin.css';
 import axios from 'axios';
 
 const Adminlogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Use useNavigate hook
+  const navigate = useNavigate();
 
   const handleLogin = (event) => {
     event.preventDefault();
-    // setError(''); // Clear any previous errors
 
     axios.post('http://localhost:8081/admin', { username, password })
     .then(res => {
         if(res.data.success){
       console.log("admin login successful");
       navigate('/AdminPage'); 
-        }// Redirect to user dashboard
+        }
+        else{
+        console.log("error")
+        alert("Error");}
     })
     .catch(err => console.log(err));
   };   
 
   return (
-    <div className="login-containerl">
+    <div className='adminlogin-login'>
+    <div className="adminlogin-container">
       <h2>Admin Login</h2>
       <form onSubmit={handleLogin}>
-        <div className="input-groupl">
-          <label htmlFor="username">Username</label>
+        <div className="input-adminlogin">
           <input
+          placeholder=' Username'
             type="text"
             id="username"
             value={username}
@@ -37,9 +40,9 @@ const Adminlogin = () => {
             required
           />
         </div>
-        <div className="input-groupl">
-          <label htmlFor="password">Password</label>
+        <div className="input-adminlogin">
           <input
+          placeholder=' Password'
             type="password"
             id="password"
             value={password}
@@ -47,9 +50,13 @@ const Adminlogin = () => {
             required
           />
         </div>
+        <div className='button-adminlogin'>
         <button type="submit">Login</button>
+        </div>
       </form>
     </div>
+    </div>
+  
   );
 };
 

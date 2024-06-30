@@ -1,55 +1,81 @@
 /* Login.css */
+.login-page{
+  background-image: url('https://images.pexels.com/photos/543224/pexels-photo-543224.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
 
- .login-containerl {
-    max-width: 400px;
+ .login-container {
+    width: 350px;
     margin: 100px auto;
     padding: 30px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 30px;
     text-align: center;
     background-color: #f9f9f9;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background:rgb(237,237,237,.1);
+    backdrop-filter:blur(20px);
   }
   
-  .login-containerl h2 {
+  .login-container h2 {
     margin-bottom: 20px;
-    color: #333;
+    color: #ffffff;
+  }
+
+  .login-container p {
+    color: #ffffff;
+    
   }
   
-  .input-groupl {
+  .input-login {
     margin-bottom: 20px;
+    display: flex;
     text-align: left;
+   
   }
   
-  .input-groupl label {
+  .input-login label {
     display: block;
     margin-bottom: 5px;
     color: #333;
     
   }
   
-  .input-groupl input {
+  .input-login input {
     width: 100%;
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 30px;
+  }
+
+  .input-login icon{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateX(80%);
+    font-size: 16px;
   }
   
-  button {
+  .button-login button {
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #38b4da;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 30px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
   
-  button:hover {
-    background-color: #0056b3;
+  .button-login button:hover {
+    background-color: #2c8eac;
   }
   
   .error-message {
@@ -58,3 +84,6 @@
   }
 
   
+
+
+ 
