@@ -2,18 +2,43 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
+const { log } = require("console");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  method: ["GET", "POST"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Serve static files from the images directory
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "houserental",
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage: storage,
 });
 
 db.connect((err) => {
@@ -24,8 +49,7 @@ db.connect((err) => {
   console.log("Connected to the database");
 });
 
-//signup
-
+// Signup endpoint
 app.post("/usersignup", (req, res) => {
   const sql =
     "INSERT INTO user(email,username,password,phoneno,place) values(?,?,?,?,?)";
@@ -42,9 +66,9 @@ app.post("/usersignup", (req, res) => {
   });
 });
 
-// admin login
+// Admin login endpoint
 app.post("/admin", (req, res) => {
-  const sql = "select * from admin where username = ? and password = ?";
+  const sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
   const values = [req.body.username, req.body.password];
   db.query(sql, values, (err, data) => {
     if (err) {
@@ -63,10 +87,9 @@ app.post("/admin", (req, res) => {
   });
 });
 
-//user login
-
+// User login endpoint
 app.post("/userlogin", (req, res) => {
-  const sql = "select * from user where username = ? and password = ?";
+  const sql = "SELECT * FROM user WHERE username = ? AND password = ?";
   const values = [req.body.username, req.body.password];
   db.query(sql, values, (err, data) => {
     if (err) {
@@ -85,8 +108,7 @@ app.post("/userlogin", (req, res) => {
   });
 });
 
-//user listing
-
+// User listing endpoint
 app.get("/userlisting", (req, res) => {
   const sql = "SELECT username, email, phoneno FROM user";
   db.query(sql, (err, data) => {
@@ -116,59 +138,202 @@ app.delete("/userlisting/:email", (req, res) => {
       return res.json({ success: true, message: "User deleted successfully" });
     } else {
       return res.json({ success: false, message: "No user found" });
-    }
-  });
-});
-
-//add Property
-
-app.post("/addproperty", (req, res) => {
-  const sql =
-    "INSERT INTO property(place,type,bedroom,bathroom,description,city) values(?,?,?,?,?,?)";
-  const values = [
-    req.body.place,
-    req.body.type,
-    req.body.bedroom,
-    req.body.bathroom,
-    req.body.description,
-    req.body.city,
-  ];
-  db.query(sql, values, (err, data) => {
-    if (err) return res.json(err);
-    return res.json({ status: "property added successfully", data });
+    }
   });
 });
 
+// Add property details endpoint
+app.post("/AddProperty", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res
+      .status(400)
+      .json({ success: false, message: "No file uploaded" });
+  }
+
+  const {
+    house_no,
+    place,
+    district,
+    bedroom,
+    bathroom,
+    description,
+    price,
+    squarefeet,
+    status,
+    furnishing,
+  } = req.body;
+
+  // Log the received data
+  console.log(req.file);
+  console.log("File upload successful");
+
+  const sql = `
+    INSERT INTO property (image, house_no, place, district, bedroom, bathroom, description, price, squarefeet, status, furnishing) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [
+    req.file.filename,
+    house_no,
+    place,
+    district,
+    bedroom,
+    bathroom,
+    description,
+    price,
+    squarefeet,
+    status,
+    furnishing,
+  ];
+
+  db.query(sql, values, (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res
+        .status(500)
+        .json({ success: false, error: "Internal server error" });
+    }
+    return res.json({
+      success: true,
+      message: "Property added successfully",
+      data,
+    });
+  });
+});
 
 //feedback
 
-app.post('/submit-feedback', (req, res) => {
+app.post("/submit-feedback", (req, res) => {
   const { username, feedback } = req.body;
 
-  const query = 'INSERT INTO feedback (username, feedback) VALUES (?, ?)';
+  const query = "INSERT INTO feedback (username, feedback) VALUES (?, ?)";
   db.query(query, [username, feedback], (error, results) => {
-      if (error) {
-          res.status(500).send('Error saving feedback');
-      } else {
-          res.status(200).send('Feedback saved successfully');
-      }
+    if (error) {
+      res.status(500).send("Error saving feedback");
+    } else {
+      res.status(200).send("Feedback saved successfully");
+    }
   });
 });
 
 //Feedback listing
 
-app.get('/feedback', (req, res) => {
-  const sql = 'SELECT * FROM feedback';
+app.get("/feedback", (req, res) => {
+  const sql = "SELECT * FROM feedback";
   db.query(sql, (err, results) => {
-      if (err) {
-          return res.status(500).json({ error: err.message });
-      }
-      res.json(results);
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
   });
 });
 
 
+//Display all properties
+app.get("/properties", (req, res) => {
+  const sql = "SELECT * FROM property";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(results);
+  });
+});
+
+
+//display using id
+app.get('/getProperty', (req, res) => {
+  const house_no = req.query.house_no;
+  const sql = 'SELECT * FROM property WHERE house_no = ?';
+  db.query(sql, [house_no], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log(result);
+    res.json(result);
+  });
+});
+
+
+//delete property
+app.delete("/property/:house_no", (req, res) => {
+  const { house_no } = req.params;
+  const sql = "DELETE FROM property WHERE house_no = ?";
+  db.query(sql, [house_no], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    if (results.affectedRows === 1) {
+      return res.json({
+        success: true,
+        message: "Property deleted successfully",
+      });
+    } else {
+      return res.json({ success: false, message: "No property found" });
+    }
+  });
+});
+// Update property details endpoint
+app.put("/updateProperty/:house_no", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res
+      .status(400)
+      .json({ success: false, message: "No file uploaded" });
+  }
+
+  const { house_no } = req.params;
+  const { place, district, bedroom, bathroom, description, price,squarefeet,
+    status,
+    furnishing } = req.body;
+
+  const sql = `
+    UPDATE property
+    SET 
+      image = ?,
+      place = ?,
+      district = ?,
+      bedroom = ?,
+      bathroom = ?,
+      description = ?,
+      price = ?,
+      squarefeet =?,
+      status = ?,
+      furnishing =?
+
+    WHERE house_no = ?
+  `;
+
+  const values = [
+    req.file.filename,
+    place,
+    district,
+    bedroom,
+    bathroom,
+    description,
+    price,
+    squarefeet,
+    status,
+    furnishing,
+    house_no,
+  ];
+
+  db.query(sql, values, (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res
+        .status(500)
+        .json({ success: false, error: "Internal server error" });
+    }
+    return res.json({
+      success: true,
+      message: "Property updated successfully",
+      data,
+    });
+  });
+});
 
 app.listen(8081, () => {
-  console.log("listening.. go to port 8081");
+  console.log("Listening on port 8081");
 });

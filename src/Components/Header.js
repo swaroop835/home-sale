@@ -1,28 +1,29 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./Header.css";
 import logo from "../logo.png";
-import Card from "./Card";
+import Card from "./Prop/Card";
 
 const Header = () => {
+  const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
+  const fetchProperties = () => {
+    axios
+      .get("http://localhost:8081/properties")
+      .then((response) => {
+        setProperties(response.data);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the properties!", error);
+      });
+  };
+
   return (
     <div>
-        
-        {/* <nav className="nav">
-         <div className="logo">
-          <a href="/Header">
-            <img src={logo} alt="Logo" />
-          </a>
-        </div> 
-          <Link to="/Adminlogin">Admin</Link>
-          <Link to="/login">Login</Link>
-        </nav> */}
-        
-         {/*<div className="logo">
-          <a href="/Header">
-            <img src={logo} alt="Logo" />
-          </a>
-        </div> */}
       <section className="hero">
         <img
           src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -37,49 +38,16 @@ const Header = () => {
           </p>
         </div>
       </section>
-      <br></br><br></br><br></br><br></br>
-      <div className="heading-cards">
-        <div className="cards-heading">
-        <h2>Popular Owner Properties</h2>
-        </div>
-        <br></br>
-      <div className="cards-container">
-        <section className="cards-section">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-        </section>
-      </div>
-      <br></br><br></br><br></br><br></br>
-      <div className="cards-heading">
-        <h2>Exclusive Owner Properties in Thiruvananthapuram</h2>
-        </div>
-        <br></br>
-      <div className="cards-container">
-        <section className="cards-section">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-        </section>
-      </div>
-      <br></br><br></br><br></br><br></br>
-      <div className="cards-heading">
-        <h2>Fresh Properties in Thiruvananthapuram</h2>
-        </div>
-        <br></br>
-      <div className="cards-container">
-        <section className="cards-section">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-        </section>
-      </div>
-      <br></br><br></br><br></br><br></br>
-      </div>
-      <div>
+<br></br><br></br>
+      <div className="card-container-userpage">
+        {properties.map((property) => (
+          <Card
+            key={property.house_no}
+            image={`http://localhost:8081/images/${property.image}`}
+            place={property.place}
+            price={property.price}
+          />
+        ))}
       </div>
     </div>
   );

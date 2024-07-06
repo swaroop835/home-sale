@@ -58,6 +58,10 @@ const Footer = () => {
             <a href="/Feedbacklist">
               <p>Testimonials</p>
             </a>
+
+            <a href="/Adminlogin">
+              <p>Admin</p>
+            </a>
           </div>
           <hr></hr>
 

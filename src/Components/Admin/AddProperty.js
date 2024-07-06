@@ -1,133 +1,212 @@
-// src/AddPropertyForm.js
-import React, { useState } from "react";
-import axios from 'axios';
-import './AddProperty.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./AddProperty.css";
 
-const AddProperty = () => {
+const AddProperty = ({ initialFormData, onCancel }) => {
+  const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
+    house_no: "",
     place: "",
-    tc_no: "",
-    type: "apartment",
-    bedrooms: "",
-    bathrooms: "",
+    district: "",
+    bedroom: "",
+    bathroom: "",
+    squarefeet: "",
+    status: "Ready to Move",
+    furnishing: "furnishing",
     description: "",
-    photo: null,
+    price: "",
+    ...initialFormData, // Populate form data with initial values for editing
   });
 
+  const handleFile = (e) => {
+    setFile(e.target.files[0]);
+  };
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'photo') {
-      setFormData({
-        ...formData,
-        photo: files[0]
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpload = (e) => {
     e.preventDefault();
-    const data = new FormData();
+    const formdata = new FormData();
+    formdata.append("image", file);
     for (const key in formData) {
-      data.append(key, formData[key]);
+      formdata.append(key, formData[key]);
     }
 
-    try {
-      const response = await axios.post('http://localhost:5000/addproperty', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+    // Determine whether to use POST (add new) or PUT (update existing)
+    const apiUrl = initialFormData
+      ? `http://localhost:8081/updateProperty/${initialFormData.house_no}`
+      : "http://localhost:8081/AddProperty";
+
+    const axiosMethod = initialFormData ? axios.put : axios.post;
+
+    axiosMethod(apiUrl, formdata)
+      .then((res) => {
+        console.log(res);
+        setFormData({
+          house_no: "",
+          place: "",
+          district: "",
+          bedroom: "",
+          bathroom: "",
+          squarefeet: "",
+          status: "Ready to Move",
+          furnishing: "furnishing",
+          description: "",
+          price: "",
+        });
+        setFile(null);
+        alert(
+          initialFormData
+            ? "Property updated successfully!"
+            : "Property added successfully!"
+        );
+      })
+      .catch((err) => {
+        console.error("Error adding/updating property:", err);
+        alert("Error adding/updating property. Please try again.");
       });
-      console.log('Success:', response.data);
-      // Handle success, e.g., show a success message or redirect
-    } catch (error) {
-      console.error('Error:', error);
-      // Handle error, e.g., show an error message
-    }
   };
 
-  
+  useEffect(() => {
+    if (initialFormData) {
+      setFormData(initialFormData); // Set form data for editing
+    }
+  }, [initialFormData]);
 
   return (
-    <form onSubmit={handleSubmit} className="page-container">
-      <div>
-        <label>Place:</label>
-        <input
-          type="text"
-          name="place"
-          value={formData.place}
-          onChange={handleChange}
-          required
-        />
+    <div className="add-property-page">
+      <div className="add-property-container">
+        <h2>{initialFormData ? "Edit Property" : "Add Property"}</h2>
+        <form onSubmit={handleUpload}>
+          <div className="input-add-property">
+            <label>Property Image</label>
+            <input type="file" onChange={handleFile} />
+          </div>
+
+          <div className="input-add-property">
+            <label>House No</label>
+            <input
+              type="text"
+              name="house_no"
+              value={formData.house_no}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>Place</label>
+            <input
+              type="text"
+              name="place"
+              value={formData.place}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>District</label>
+            <input
+              type="text"
+              name="district"
+              value={formData.district}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>Bedroom</label>
+            <input
+              type="number"
+              name="bedroom"
+              value={formData.bedroom}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>Bathroom</label>
+            <input
+              type="number"
+              name="bathroom"
+              value={formData.bathroom}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>Square Feet</label>
+            <input
+              type="number"
+              name="squarefeet"
+              value={formData.squarefeet}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              <option value="Ready to Move">Ready to Move</option>
+              <option value="Not Ready to Move">Not Ready to Move</option>
+              <option value="Just Up For Some Patch Works">
+                Just Up For Some Patch works
+              </option>
+            </select>
+          </div>
+
+          <div className="input-add-property">
+            <label>Furnishing</label>
+            <select
+              name="furnishing"
+              value={formData.furnishing}
+              onChange={handleChange}
+            >
+              <option value="Furnished">Furnished</option>
+              <option value="UnFurnished">UnFurnished</option>
+              <option value="Semi-Furnished">Semi-Furnished</option>
+            </select>
+          </div>
+
+          <div className="input-add-property">
+            <label>Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="input-add-property">
+            <label>Price</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="button-add-property">
+            <button type="submit">{initialFormData ? "Update" : "Add"}</button>
+            {initialFormData && (
+              <button type="button" onClick={onCancel}>
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
       </div>
-      <div>
-        <label>TC No:</label>
-        <input
-          type="text"
-          name="tc_no"
-          value={formData.tc_no}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Type:</label>
-        <select
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
-          required
-        >
-          <option value="apartment">Apartment</option>
-          <option value="house">House</option>
-          <option value="villa">Villa</option>
-        </select>
-      </div>
-      <div>
-        <label>Number of Bedrooms:</label>
-        <input
-          type="number"
-          name="bedrooms"
-          value={formData.bedrooms}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Number of Bathrooms:</label>
-        <input
-          type="number"
-          name="bathrooms"
-          value={formData.bathrooms}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Description:</label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Photo:</label>
-        <input
-          type="file"
-          name="photo"
-          accept="image/*"
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <button type="submit">Add Property</button>
-    </form>
+    </div>
   );
 };
 

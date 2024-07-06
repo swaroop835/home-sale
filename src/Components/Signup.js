@@ -7,7 +7,7 @@ function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneno, setPhoneno] = useState("");
   const [place, setPlace] = useState("");
   const navigate = useNavigate();
@@ -19,6 +19,11 @@ function Signup() {
 
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
+      return;
+    }
+
+    if (phoneno.length !== 10) {
+      alert("Phone number must be exactly 10 digits!");
       return;
     }
 
@@ -35,11 +40,10 @@ function Signup() {
       .then((response) => {
         console.log("User added:", response.data);
 
-        // Clear form after submission (optional)
         setUsername("");
         setEmail("");
         setPassword("");
-        setConfirmPassword(""); // Clear confirm password
+        setConfirmPassword("");
         setPhoneno("");
         setPlace("");
         setSuccessMessage("Sign up Successful");
@@ -61,7 +65,7 @@ function Signup() {
 
   const handlePhoneChange = (event) => {
     const value = event.target.value;
-    if (/^\d*$/.test(value)) {
+    if (/^\d*$/.test(value) && value.length <= 10) {
       setPhoneno(value);
     }
   };
@@ -99,6 +103,8 @@ function Signup() {
               value={phoneno}
               onChange={handlePhoneChange}
               required
+              pattern="\d{10}"
+              title="Phone number must be exactly 10 digits"
             />
           </div>
           <div className="input-signup">
@@ -142,4 +148,3 @@ function Signup() {
 }
 
 export default Signup;
-

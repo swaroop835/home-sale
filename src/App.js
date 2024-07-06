@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./Components/Header";
 import Signup from "./Components/Signup";
 import Login from "./Components/Login";
-import Contactus from "./Components/Contactus";
+// import Contactus from "./Components/Contactus";
 import AdminPage from "./Components/Admin/AdminPage";
 import Adminlogin from "./Components/Admin/Adminlogin";
 import AddProperty from "./Components/Admin/AddProperty";
-import Propertylisting from "./Components/Admin/Propertylisting";
+import PropertyTable from "./Components/Admin/PropertyTable";
 import Userlisting from "./Components/Admin/Userlisting";
 import Terms from "./Components/Footer/Terms";
 import Policy from "./Components/Footer/Policy";
@@ -17,56 +17,46 @@ import Footer from "./Components/Footer/Footer";
 import FeedbackForm from "./Components/Footer/FeedbackForm";
 import Feedbacklist from "./Components/Footer/Feedbacklist";
 import Body from "./Components/body/Body";
-import Navbar from "./Components/CustomNavbar";
-// import ReadMore from "./Components/Footer/ReadMore";
-
-
-
-
-
+import CustomNavbar from "./Components/Nav/CustomNavbar";
+import UserPage from "./Components/UserPage";
+import PropertyDetails from "./Components/Prop/PropertyDetails";
 
 function App() {
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
   return (
     <div className="App">
-      {/* <Header />
-      <Login/> */}
-      {/* <Contactus /> */}
-      {/* <AdminPage/> */}
-      {/* <Adminlogin/> */}
-      {/* <AddProperty/> */}
-      {/* <PropertyListing /> */}
-      {/* <Userlisting/> */}
-      {/* <Terms/> */}
-      {/* <Policy/> */}
-      {/* <SalesEnquiry/> */}
-      {/* <Footer/> */}
-      {/* <FeedbackForm/> */}
-      {/* <Feedbacklist/> */}
-      {/* <HomePage/> */}
-      {/* <NavBar /> */}
-      <Navbar/>
-      
       <Router>
+        <CustomNavbar username={username} />
         <Routes>
-          <Route path="/" Component={Header} />
-          <Route path="/Login" Component={Login} />
-          <Route path="/Contactus" Component={Contactus} />
-          <Route path="/Signup" Component={Signup} />
-          <Route path="/AdminPage" Component={AdminPage} />
-          <Route path="/Adminlogin" Component={Adminlogin} />
-          <Route path="/Header" Component={Header} />
-          <Route path="/AddProperty" Component={AddProperty} />
-          <Route path="Propertylisting" Component={Propertylisting} />
-          <Route path="Userlisting" Component={Userlisting} />
-          <Route path="Terms" Component={Terms} />
-          <Route path="Policy" Component={Policy} />
-          <Route path="SalesEnquiry" Component={SalesEnquiry} />
-          <Route path="FeedbackForm" Component={FeedbackForm} />
-          <Route path="Feedbacklist" Component={Feedbacklist} />
+          <Route path="/" element={<Header />} />
+          <Route path="/Login" element={<Login />} />
+          {/* <Route path="/Contactus" element={<Contactus />} /> */}
+          <Route path="/Signup" element={<Signup />} />
+          <Route path="/AdminPage" element={<AdminPage />} />
+          <Route path="/Adminlogin" element={<Adminlogin />} />
+          <Route path="/Header" element={<Header />} />
+          <Route path="/AddProperty" element={<AddProperty />} />
+          <Route path="/PropertyTable" element={<PropertyTable />} />
+          <Route path="/Userlisting" element={<Userlisting />} />
+          <Route path="/Terms" element={<Terms />} />
+          <Route path="/Policy" element={<Policy />} />
+          <Route path="/SalesEnquiry" element={<SalesEnquiry />} />
+          <Route path="/FeedbackForm" element={<FeedbackForm />} />
+          <Route path="/Feedbacklist" element={<Feedbacklist />} />
+          <Route path="/UserPage" element={<UserPage setUsername={setUsername} />} />
+          <Route path="/PropertyDetails" element={<PropertyDetails />} />
         </Routes>
       </Router>
-      <Body/>
-      <Footer/>
+      <Body />
+      <Footer />
     </div>
   );
 }

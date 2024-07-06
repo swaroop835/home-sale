@@ -1,0 +1,107 @@
+
+
+.search-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-box:focus {
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+.search-box:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 0 10px rgba(39, 140, 255, 0.821); 
+}
+
+
+.property-table-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.property-table-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.search-box {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.property-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.property-table th,
+.property-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.property-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.property-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-button {
+  padding: 8px 12px;
+  margin: 4px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  width: 80px;
+  text-align: center;
+}
+
+.delete-button {
+  background-color: #ff4d4f;
+}
+
+.delete-button:hover {
+  background-color: #ff7875;
+}
+
+.edit-button {
+  background-color: #1890ff;
+}
+
+.edit-button:hover {
+  background-color: #40a9ff;
+}

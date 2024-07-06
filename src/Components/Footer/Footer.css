@@ -4,9 +4,9 @@
 }
 .footer{
   background-color: rgb(255, 255, 255);
-  background: linear-gradient(to right, #ffffff, #a34dee);
+  background: linear-gradient(to right, #ffffff, #78747d);
   padding: 20px;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 .footer-icons{
   gap: 10px;
@@ -33,11 +33,6 @@
   color: white;
 }
 
-.sb_footer-links_div p{
-  color: black;
-
-}
-
 .footer a{
 color: rgb(0, 0, 0);
 text-decoration: none;
@@ -54,14 +49,21 @@ text-decoration: none;
   line-height: 15px;
   margin:0.5rem 0;
   cursor: pointer;
-}
+  color: black;
 
+}
 
 .footer hr{
   color:rgb(0, 0, 0);
   width: 100%;
   margin: 0.2rem 0;
 } 
+
+.sb_footer-copyright {
+  text-align: center;
+  width: 100%;
+  padding-top: 10px;
+}
 
 .sb_footer-copyright p{
   font-size:15px;

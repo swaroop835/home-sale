@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import logo from "../logo.png";
 import axios from "axios";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { MdOutlineLockOpen } from "react-icons/md";
@@ -22,14 +21,8 @@ const Login = () => {
         if (res.data.success) {
           console.log("User login successful");
           alert("Login successful");
-          localStorage.setItem("username", JSON.stringify(username));
-          navigate("/Header");
-
-          
-          const storedUsername = JSON.parse(localStorage.getItem("username"));
-
-          
-          console.log(storedUsername);
+          localStorage.setItem("username", username);
+          navigate("/UserPage");
         } else {
           console.log("failed");
           alert("Failed");
@@ -56,7 +49,7 @@ const Login = () => {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-            <FaRegCircleUser className="icon"/>
+            <FaRegCircleUser className="icon" />
           </div>
 
           <div className="input-login">

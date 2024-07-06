@@ -1,0 +1,56 @@
+/* UserPage.css */
+
+.card-container-userpage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center; /* Center the cards horizontally */
+  padding: 16px;
+}
+
+.card-item-userpage {
+  flex: 1 1 calc(33.333% - 32px); /* Adjust the percentage for the number of cards per row */
+  box-sizing: border-box;
+  margin: 16px;
+  max-width: calc(33.333% - 32px);
+}
+
+.hero-userpage {
+  position: relative;
+  text-align: center;
+  color: white;
+  height: 675px;
+}
+
+.hero-image-userpage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-text-overlay-userpage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+
+.search-container-userpage {
+  text-align: center;
+  margin: 16px 0;
+}
+
+.search-box-userpage {
+  padding: 8px;
+  font-size: 16px;
+  width: 300px;
+  border-radius: 20px;
+  transition: all 0.5s ease; 
+}
+
+.search-box-userpage:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 0 10px rgba(39, 140, 255, 0.821); 
+}

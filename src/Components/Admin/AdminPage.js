@@ -1,29 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+// AdminPage.jsx
+import React, { useState } from 'react';
 import './AdminPage.css';
+import Sidebar from './Sidebar';
+import AHeader from './AHeader';
+import AHome from './AHome';
 
-const AdminPage = () => {
+function AdminPage() {
+  const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
+
+  const toggleSidebar = () => {
+    setOpenSidebarToggle(!openSidebarToggle);
+  };
+
   return (
-    <div className='admin-page'>
-    <div className="admin-container">
-      <h1>Admin Panel</h1>
-
-      <h2>Property Listings</h2>
-      <Link to="/Propertylisting">Click Here</Link>
-
-      <h2>User Listings</h2>
-      <Link to="/Userlisting">Click Here</Link>
-
-      <h2>Add Property</h2>
-      <Link to="/AddProperty">Click Here</Link>
-    </div>
+    <div className='admin-grid-container'>
+      <AHeader toggleSidebar={toggleSidebar} />
+      <Sidebar openSidebarToggle={openSidebarToggle} toggleSidebar={toggleSidebar} />
+      <AHome />
     </div>
   );
-};
+}
 
 export default AdminPage;
-
-
-  
-
-

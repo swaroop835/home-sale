@@ -1,6 +1,6 @@
 import React from "react";
 import './Body.css';
-import logo from "../../logo.png";
+// import logo from "../../logo.png";
 
 const Body=()=>{
     return(

@@ -1,45 +1,225 @@
-.admin-page{
-    background-color: #ffffff;
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body {
+  margin: 0;
+  padding: 0;
+  color: #323232;
+  background-color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.icon {
+  vertical-align: middle;
+  line-height: 1px;
+  font-size: 20px;
+}
+
+.icon-header {
+  vertical-align: middle;
+  line-height: 1px;
+  font-size: 26px;
+}
+
+.icon,
+.icon-header {
+  margin-right: 5px;
+}
+
+.close-icon {
+  color: red;
+  margin-left: 30px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.admin-grid-container {
+  display: grid;
+  grid-template-columns: 260px 1fr 1fr 1fr;
+  grid-template-rows: 0.2fr 3fr;
+  grid-template-areas:
+    'sidebar header header header'
+    'sidebar main main main';
+  height: 100vh;
+}
+
+/* Header */
+.admin-header {
+  grid-area: header;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px 0 30px;
+  box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
+}
+
+.admin-menu-icon {
+  display: none;
+}
+/* End Header */
+
+/* Sidebar */
+#sidebar {
+  grid-area: sidebar;
+  height: 100%;
+  background-color: #263043;
+  overflow-y: auto;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+
+.admin-sidebar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px 0px 30px;
+  margin-bottom: 30px;
+}
+
+.admin-sidebar-title > span {
+  display: none;
+}
+
+.admin-sidebar-brand {
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #9e9ea4;
+}
+
+.admin-sidebar-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.admin-sidebar-list-item {
+  padding: 20px 20px 20px 20px;
+  font-size: 18px;
+}
+
+.admin-sidebar-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.admin-sidebar-list-item > a {
+  text-decoration: none;
+  color: #9e9ea4;
+}
+
+.admin-sidebar-responsive {
+  display: inline !important;
+  position: absolute;
+  z-index: 12 !important;
+}
+
+/* End Sidebar */
+
+/* Main */
+.admin-main-container {
+  grid-area: main;
+  overflow-y: auto;
+  padding: 20px 20px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.admin-main-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-main-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+  margin: 15px 0;
+}
+
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 8px 15px;
+  border-radius: 5px;
+}
+
+.admin-card:first-child {
+  background-color: #2962ff;
+}
+
+.admin-card:nth-child(2) {
+  background-color: #ff6d00;
+}
+
+.admin-card:nth-child(3) {
+  background-color: #2e7d32;
+}
+
+.admin-card:nth-child(4) {
+  background-color: #d50000;
+}
+
+.admin-card-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-card-inner > .card-icon {
+  font-size: 25px;
+}
+
+.admin-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 60px;
+  height: 300px;
+}
+
+/* End Main */
+
+/* Medium <= 992px */
+
+@media screen and (max-width: 992px) {
+  .admin-grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.2fr 3fr;
+    grid-template-areas:
+      'header'
+      'main';
   }
-  .admin-container {
-    width: 400px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    text-align: center;
+
+  #sidebar {
+    display: none;
   }
-  
-  .admin-container h1 {
-    color: #333;
-    margin-bottom: 20px;
+
+  .admin-menu-icon {
+    display: inline;
   }
-  
-  .admin-container h2 {
+
+  .admin-sidebar-title > span {
+    display: inline;
+  }
+}
+
+/* Small <= 768px */
+
+@media screen and (max-width: 768px) {
+  .admin-main-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .admin-charts {
+    grid-template-columns: 1fr;
     margin-top: 30px;
-    margin-bottom: 10px;
   }
-  
-  .admin-container a {
-    display: block;
-    text-decoration: none;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-    background-color: #669cd5;
-    color: #fff;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+}
+
+/* Extra Small <= 576px */
+
+@media screen and (max-width: 576px) {
+  .admin-header-left {
+    display: none;
   }
-  
-  .admin-container a:hover {
-    background-color: #0056b3;
-  }
-  
+}

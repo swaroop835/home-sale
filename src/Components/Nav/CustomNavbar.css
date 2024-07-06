@@ -1,0 +1,33 @@
+.custom-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand img {
+  height: 40px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #007bff;
+  font-size: 1rem;
+}
+
+.nav-link:hover {
+  color: #0056b3;
+}
