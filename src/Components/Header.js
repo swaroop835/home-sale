@@ -39,6 +39,10 @@ const Header = () => {
         </div>
       </section>
 <br></br><br></br>
+<center>
+<h2>Popular Properties</h2>
+</center>
+<br></br>
       <div className="card-container-userpage">
         {properties.map((property) => (
           <Card

@@ -227,7 +227,6 @@ app.get("/feedback", (req, res) => {
   });
 });
 
-
 //Display all properties
 app.get("/properties", (req, res) => {
   const sql = "SELECT * FROM property";
@@ -240,41 +239,39 @@ app.get("/properties", (req, res) => {
   });
 });
 
-
 //display using id
-app.get('/getProperty', (req, res) => {
+app.get("/getProperty", (req, res) => {
   const house_no = req.query.house_no;
-  const sql = 'SELECT * FROM property WHERE house_no = ?';
+  const sql = "SELECT * FROM property WHERE house_no = ?";
   db.query(sql, [house_no], (err, result) => {
     if (err) {
-      console.error('Database error:', err);
+      console.error("Database error:", err);
       return res.status(500).json({ error: err.message });
     }
     console.log(result);
     res.json(result);
   });
-});
-
-
-//delete property
-app.delete("/property/:house_no", (req, res) => {
-  const { house_no } = req.params;
-  const sql = "DELETE FROM property WHERE house_no = ?";
-  db.query(sql, [house_no], (err, results) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: err.message });
-    }
-    if (results.affectedRows === 1) {
-      return res.json({
-        success: true,
-        message: "Property deleted successfully",
-      });
-    } else {
-      return res.json({ success: false, message: "No property found" });
-    }
+  //booking
+  app.post("/bookProperty", (req, res) => {
+    const { username, house_no, booking_date, time_slot } = req.body;
+    console.log(username);
+    const query =
+      "INSERT INTO bookings (username, house_no, booking_date, time_slot) VALUES (?, ?, ?, ?)";
+    db.query(
+      query,
+      [username, house_no, booking_date, time_slot],
+      (err, result) => {
+        if (err) {
+          console.error("Error booking property:", err);
+          res.status(500).send("Error booking property");
+        } else {
+          res.status(200).send("Booking confirmed");
+        }
+      }
+    );
   });
 });
+
 // Update property details endpoint
 app.put("/updateProperty/:house_no", upload.single("image"), (req, res) => {
   if (!req.file) {
@@ -284,9 +281,17 @@ app.put("/updateProperty/:house_no", upload.single("image"), (req, res) => {
   }
 
   const { house_no } = req.params;
-  const { place, district, bedroom, bathroom, description, price,squarefeet,
+  const {
+    place,
+    district,
+    bedroom,
+    bathroom,
+    description,
+    price,
+    squarefeet,
     status,
-    furnishing } = req.body;
+    furnishing,
+  } = req.body;
 
   const sql = `
     UPDATE property
@@ -331,6 +336,145 @@ app.put("/updateProperty/:house_no", upload.single("image"), (req, res) => {
       message: "Property updated successfully",
       data,
     });
+  });
+});
+
+app.get("/getBookings", (req, res) => {
+  const query = `
+    SELECT username, house_no, booking_date, time_slot, reason, status 
+    FROM bookings 
+    ORDER BY booking_date DESC, time_slot ASC
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching bookings:", err);
+      res.status(500).send("Error fetching bookings");
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
+app.delete("/deleteBooking", (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).send("Username is required");
+  }
+
+  const query = `
+    DELETE FROM bookings 
+    WHERE username = ?
+  `;
+
+  db.query(query, [username], (err, result) => {
+    if (err) {
+      console.error("Error deleting booking:", err);
+      res.status(500).send("Error deleting booking");
+    } else if (result.affectedRows === 0) {
+      res.status(404).send("Booking not found");
+    } else {
+      res.status(200).send("Booking deleted");
+    }
+  });
+});
+// Approve booking
+app.post("/approveBooking", (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).send("Username is required");
+  }
+
+  const query = `
+    UPDATE bookings 
+    SET status = 'Approved', reason = 'nil'
+    WHERE username = ?
+  `;
+
+  db.query(query, [username], (err, result) => {
+    if (err) {
+      console.error("Error approving booking:", err);
+      res.status(500).json({ error: "Error approving booking" });
+    } else if (result.affectedRows === 0) {
+      res.status(404).json({ error: "Booking not found" });
+    } else {
+      res.status(200).json({ message: "Booking approved" });
+    }
+  });
+});
+
+// Disapprove booking
+app.post("/disapproveBooking", (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).send("Username is required");
+  }
+
+  const query = `
+    UPDATE bookings 
+    SET status = 'Disapproved'
+    WHERE username = ?
+  `;
+
+  db.query(query, [username], (err, result) => {
+    if (err) {
+      console.error("Error disapproving booking:", err);
+      res.status(500).send("Error disapproving booking");
+    } else if (result.affectedRows === 0) {
+      res.status(404).send("Booking not found");
+    } else {
+      res.status(200).send("Booking disapproved");
+    }
+  });
+});
+
+app.post("/updateBookingReason", (req, res) => {
+  const { username, reason } = req.body;
+
+  if (!username || !reason) {
+    return res.status(400).send("Username and reason are required");
+  }
+
+  const query = `
+    UPDATE bookings 
+    SET reason = ? 
+    WHERE username = ?
+  `;
+
+  db.query(query, [reason, username], (err, result) => {
+    if (err) {
+      console.error("Error updating booking reason:", err);
+      res.status(500).send("Error updating booking reason");
+    } else if (result.affectedRows === 0) {
+      res.status(404).send("Booking not found");
+    } else {
+      res.status(200).send("Booking reason updated");
+    }
+  });
+});
+
+// Get booking by username
+app.get("/getBooking", (req, res) => {
+  const { username } = req.query;
+
+  if (!username) {
+    return res.status(400).send("Username is required");
+  }
+
+  const query = "SELECT * FROM bookings WHERE username = ?";
+
+  db.query(query, [username], (err, result) => {
+    if (err) {
+      console.error("Error fetching booking:", err);
+      res.status(500).send("Error fetching booking");
+    } else if (result.length === 0) {
+      res.status(404).send("Booking not found");
+    } else {
+      res.status(200).json(result[0]);
+    }
   });
 });
 

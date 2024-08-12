@@ -4,7 +4,7 @@ import "./App.css";
 import Header from "./Components/Header";
 import Signup from "./Components/Signup";
 import Login from "./Components/Login";
-// import Contactus from "./Components/Contactus";
+
 import AdminPage from "./Components/Admin/AdminPage";
 import Adminlogin from "./Components/Admin/Adminlogin";
 import AddProperty from "./Components/Admin/AddProperty";
@@ -20,6 +20,9 @@ import Body from "./Components/body/Body";
 import CustomNavbar from "./Components/Nav/CustomNavbar";
 import UserPage from "./Components/UserPage";
 import PropertyDetails from "./Components/Prop/PropertyDetails";
+import Order from "./Components/Admin/Order";
+import Userorder from "./Components/Userorder";
+import LoginModal from "./Components/Prop/LoginModal";
 
 function App() {
   const [username, setUsername] = useState(null);
@@ -51,10 +54,17 @@ function App() {
           <Route path="/SalesEnquiry" element={<SalesEnquiry />} />
           <Route path="/FeedbackForm" element={<FeedbackForm />} />
           <Route path="/Feedbacklist" element={<Feedbacklist />} />
-          <Route path="/UserPage" element={<UserPage setUsername={setUsername} />} />
+          <Route
+            path="/UserPage"
+            element={<UserPage setUsername={setUsername} />}
+          />
           <Route path="/PropertyDetails" element={<PropertyDetails />} />
+          <Route path="/Order" element={<Order />} />
+          <Route path="/Userorder" element={<Userorder />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
+
       <Body />
       <Footer />
     </div>

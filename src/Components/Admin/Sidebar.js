@@ -1,14 +1,11 @@
 // Sidebar.jsx
 import React from "react";
 import {
-  BsCart3,
-  BsGrid1X2Fill,
-  BsFillArchiveFill,
-  BsFillGrid3X3GapFill,
+  
   BsPeopleFill,
   BsListCheck,
   BsMenuButtonWideFill,
-  BsFillGearFill,
+  
 } from "react-icons/bs";
 import { FaHouse } from "react-icons/fa6";
 import { CgBorderStyleDashed } from "react-icons/cg";
@@ -27,22 +24,14 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
       </div>
 
       <ul className="admin-sidebar-list">
-        <li className="admin-sidebar-list-item">
-          <a href="">
-            <BsGrid1X2Fill className="icon" /> Dashboard
-          </a>
-        </li>
+        
         <li className="admin-sidebar-list-item">
           <a href="/PropertyTable">
             <FaHouse className="icon" />
             Properties
           </a>
         </li>
-        <li className="admin-sidebar-list-item">
-          <a href="">
-            <BsFillGrid3X3GapFill className="icon" /> Categories
-          </a>
-        </li>
+       
         <li className="admin-sidebar-list-item">
           <a href="/Userlisting">
             <BsPeopleFill className="icon" /> Customers
@@ -61,7 +50,7 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
           </a>
         </li>
         <li className="admin-sidebar-list-item">
-          <a href="">
+          <a href="/Order">
             <CgBorderStyleDashed className="icon" />
             Orders
           </a>

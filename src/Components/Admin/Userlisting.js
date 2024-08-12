@@ -64,7 +64,7 @@ const UserListing = () => {
           onClick={() => showDeleteConfirm(record.email)}
           className="delete-button"
         >
-          Delete
+          Remove
         </Button>
       ),
     },

@@ -9,14 +9,14 @@ function FeedbackForm() {
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
-      setUsername(JSON.parse(storedUsername));
+      setUsername(storedUsername); // No need to parse since it's stored as a plain string
     }
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      localStorage.setItem("username", JSON.stringify(username));
+      localStorage.setItem("username", username); // Store as a plain string
 
       const response = await axios.post("http://localhost:8081/submit-feedback", {
         username,

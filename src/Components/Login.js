@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { MdOutlineLockOpen } from "react-icons/md";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -38,7 +37,7 @@ const Login = () => {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h2>Dream Homes</h2>
+        <h2 style={{color: "grey"}}>Dream Homes</h2>
         <form>
           <div className="input-login">
             <input
@@ -49,7 +48,7 @@ const Login = () => {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-            <FaRegCircleUser className="icon" />
+            
           </div>
 
           <div className="input-login">
@@ -61,7 +60,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <MdOutlineLockOpen className="icon" />
+           
           </div>
 
           <div className="button-login">
@@ -70,7 +69,7 @@ const Login = () => {
             </button>
           </div>
           <div className="button-login">
-            <p>Don't have an account?</p>
+            <p style={{color: "grey"}}>Don't have an account?</p>
             <Link to="/signup">
               <button type="button">Sign Up</button>
             </Link>

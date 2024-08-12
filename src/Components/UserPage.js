@@ -6,6 +6,8 @@ import Card from "./Prop/Card";
 const UserPage = ({ setUsername }) => {
   const [properties, setProperties] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [minBudget, setMinBudget] = useState(0);
+  const [maxBudget, setMaxBudget] = useState(1000000); // Set a default maximum budget value
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -30,8 +32,19 @@ const UserPage = ({ setUsername }) => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredProperties = properties.filter((property) =>
-    property.district.toLowerCase().includes(searchQuery.toLowerCase())
+  const handleMinBudgetChange = (e) => {
+    setMinBudget(e.target.value);
+  };
+
+  const handleMaxBudgetChange = (e) => {
+    setMaxBudget(e.target.value);
+  };
+
+  const filteredProperties = properties.filter(
+    (property) =>
+      property.place.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      property.price >= parseFloat(minBudget) &&
+      property.price <= parseFloat(maxBudget)
   );
 
   return (
@@ -51,18 +64,43 @@ const UserPage = ({ setUsername }) => {
             it easy to find the perfect place for you.
           </p>
         </div>
-      </section><br></br><br></br>
+      </section>
+      <br></br>
+      <br></br>
 
       <div className="search-container-userpage">
         <input
           type="text"
-          placeholder="Search by District"
+          placeholder="Search by Place"
           value={searchQuery}
           onChange={handleSearchChange}
           className="search-box"
         />
+        <div className="budget-container">
+          <label>Min Budget: ${minBudget}</label>
+          <input
+            type="range"
+            min="0"
+            max="1000000"
+            step="1000"
+            value={minBudget}
+            onChange={handleMinBudgetChange}
+            className="budget-slider"
+          />
+          <label>Max Budget: ${maxBudget}</label>
+          <input
+            type="range"
+            min="0"
+            max="10000000"
+            step="1000"
+            value={maxBudget}
+            onChange={handleMaxBudgetChange}
+            className="budget-slider"
+          />
+        </div>
       </div>
-      <br></br><br></br>
+      <br></br>
+      <br></br>
 
       <div className="card-container-userpage">
         {filteredProperties.map((property) => (
@@ -76,8 +114,10 @@ const UserPage = ({ setUsername }) => {
           />
         ))}
       </div>
-      <br></br><br></br>
-      <br></br><br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
     </div>
   );
 };

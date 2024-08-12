@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./PropertyTable.css";
 import AddProperty from "./AddProperty";
+import AHome from "./AHome"; 
 
 const PropertyTable = () => {
   const [properties, setProperties] = useState([]);
+  const [propertyCount, setPropertyCount] = useState(0); // State for storing the number of properties
   const [searchQuery, setSearchQuery] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editProperty, setEditProperty] = useState(null);
@@ -18,6 +20,7 @@ const PropertyTable = () => {
       .get("http://localhost:8081/properties")
       .then((response) => {
         setProperties(response.data);
+        setPropertyCount(response.data.length); // Update the property count
       })
       .catch((error) => {
         console.error("There was an error fetching the properties!", error);
@@ -65,6 +68,7 @@ const PropertyTable = () => {
   return (
     <div className="property-table-container">
       <h2 className="property-table-title">Property Listings</h2>
+      <p>Total Properties: {propertyCount}</p> 
       <input
         type="text"
         placeholder="Search by District"
@@ -78,63 +82,68 @@ const PropertyTable = () => {
           onCancel={handleCancelEdit}
         />
       ) : (
-        <table className="property-table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>House No</th>
-              <th>Place</th>
-              <th>District</th>
-              <th>Bedroom</th>
-              <th>Bathroom</th>
-              <th>Square Feet</th>
-              <th>Status</th>
-              <th>Furnishing</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProperties.map((property) => (
-              <tr key={property.house_no}>
-                <td>
-                  <img
-                    src={`http://localhost:8081/images/${property.image}`}
-                    alt={property.description}
-                    className="property-image"
-                  />
-                </td>
-                <td>{property.house_no}</td>
-                <td>{property.place}</td>
-                <td>{property.district}</td>
-                <td>{property.bedroom}</td>
-                <td>{property.bathroom}</td>
-                <td>{property.squarefeet}</td>
-                <td>{property.status}</td>
-                <td>{property.furnishing}</td>
-                <td>{property.description}</td>
-                <td>{property.price}</td>
-                <td>
-                  <div className="action-buttons">
-                    <button
-                      className="action-button delete-button"
-                      onClick={() => handleDelete(property.house_no)}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="action-button edit-button"
-                      onClick={() => handleEdit(property)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </td>
+        <div>
+          {/* Pass propertyCount as a prop to AHome */}
+          <AHome propertyCount={propertyCount} />
+          
+          <table className="property-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>House No</th>
+                <th>Place</th>
+                <th>District</th>
+                <th>Bedroom</th>
+                <th>Bathroom</th>
+                <th>Square Feet</th>
+                <th>Status</th>
+                <th>Furnishing</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredProperties.map((property) => (
+                <tr key={property.house_no}>
+                  <td>
+                    <img
+                      src={`http://localhost:8081/images/${property.image}`}
+                      alt={property.description}
+                      className="property-image"
+                    />
+                  </td>
+                  <td>{property.house_no}</td>
+                  <td>{property.place}</td>
+                  <td>{property.district}</td>
+                  <td>{property.bedroom}</td>
+                  <td>{property.bathroom}</td>
+                  <td>{property.squarefeet}</td>
+                  <td>{property.status}</td>
+                  <td>{property.furnishing}</td>
+                  <td>{property.description}</td>
+                  <td>{property.price}</td>
+                  <td>
+                    <div className="action-buttons">
+                      <button
+                        className="action-button delete-button"
+                        onClick={() => handleDelete(property.house_no)}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        className="action-button edit-button"
+                        onClick={() => handleEdit(property)}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
