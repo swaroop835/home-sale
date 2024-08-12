@@ -40,11 +40,18 @@ const UserPage = ({ setUsername }) => {
     setMaxBudget(e.target.value);
   };
 
+<<<<<<< HEAD
   const filteredProperties = properties.filter(
     (property) =>
       property.place.toLowerCase().includes(searchQuery.toLowerCase()) &&
       property.price >= parseFloat(minBudget) &&
       property.price <= parseFloat(maxBudget)
+=======
+  const filteredProperties = properties.filter((property) =>
+    property.place.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    property.price >= parseFloat(minBudget) &&
+    property.price <= parseFloat(maxBudget)
+>>>>>>> 0a62f07448226c919e3e8ed808f4f15268ac5446
   );
 
   return (

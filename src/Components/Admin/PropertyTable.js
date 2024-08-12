@@ -62,7 +62,7 @@ const PropertyTable = () => {
   };
 
   const filteredProperties = properties.filter((property) =>
-    property.district.toLowerCase().includes(searchQuery.toLowerCase())
+    property.place.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -71,7 +71,7 @@ const PropertyTable = () => {
       <p>Total Properties: {propertyCount}</p> 
       <input
         type="text"
-        placeholder="Search by District"
+        placeholder="Search by Place"
         value={searchQuery}
         onChange={handleSearchChange}
         className="search-box"

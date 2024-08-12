@@ -58,13 +58,21 @@
   font-size: 16px;
   color: #000;
   text-decoration: none;
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 0a62f07448226c919e3e8ed808f4f15268ac5446
 }
 
 .dropdown-menu {
   display: block;
   position: absolute;
   top: 100%;
+<<<<<<< HEAD
   right: 100%;
+=======
+  right: 0;
+>>>>>>> 0a62f07448226c919e3e8ed808f4f15268ac5446
   background-color: #fff;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
   padding: 10px;
