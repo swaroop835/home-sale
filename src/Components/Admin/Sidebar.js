@@ -38,11 +38,11 @@ function Sidebar({ openSidebarToggle, toggleSidebar }) {
             Properties
           </a>
         </li>
-        <li className="admin-sidebar-list-item">
+        {/* <li className="admin-sidebar-list-item">
           <a href="">
             <BsFillGrid3X3GapFill className="icon" /> Categories
           </a>
-        </li>
+        </li> */}
         <li className="admin-sidebar-list-item">
           <a href="/Userlisting">
             <BsPeopleFill className="icon" /> Customers

@@ -38,6 +38,10 @@ color: rgb(0, 0, 0);
 text-decoration: none;
 }
 
+.footer a:hover{
+  color: rgb(119, 119, 119);
+}
+
 .sb_footer-links h2{
   color:black ;
   font-size: 20px;
