@@ -24,3 +24,4 @@ const Card = ({ image, place, price, id, houseno }) => {
 };
 
 export default Card;
+  

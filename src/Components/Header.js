@@ -3,30 +3,32 @@ import axios from "axios";
 import "./Header.css";
 import logo from "../logo.png";
 import Card from "./Prop/Card";
-
+import house1 from "../backgroundimg/imageshouse.jpg";
+ 
 const Header = () => {
   const [properties, setProperties] = useState([]);
-
+ 
   useEffect(() => {
     fetchProperties();
   }, []);
-
+ 
   const fetchProperties = () => {
     axios
       .get("http://localhost:8081/properties")
       .then((response) => {
         setProperties(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.error("There was an error fetching the properties!", error);
       });
   };
-
+ 
   return (
     <div>
       <section className="hero">
         <img
-          src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          src={house1}
           alt="House Rentals"
           className="hero-image"
         />
@@ -38,16 +40,13 @@ const Header = () => {
           </p>
         </div>
       </section>
-<br></br><br></br>
-<center>
-<h2>Popular Properties</h2>
-</center>
-<br></br>
+      <br></br>
+      <br></br>
       <div className="card-container-userpage">
         {properties.map((property) => (
           <Card
             key={property.house_no}
-            image={`http://localhost:8081/images/${property.image}`}
+            image={`http://localhost:8081/images/${property.image1}`}
             place={property.place}
             price={property.price}
           />
@@ -56,5 +55,5 @@ const Header = () => {
     </div>
   );
 };
-
+ 
 export default Header;

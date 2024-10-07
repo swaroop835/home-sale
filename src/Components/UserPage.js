@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserPage.css";
 import Card from "./Prop/Card";
+import house2 from "../backgroundimg/userpageimg.jpeg";
 
 const UserPage = ({ setUsername }) => {
   const [properties, setProperties] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [minBudget, setMinBudget] = useState(0);
   const [maxBudget, setMaxBudget] = useState(1000000); // Set a default maximum budget value
+  const [sortOption, setSortOption] = useState(""); // State to manage sorting option
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -33,32 +35,42 @@ const UserPage = ({ setUsername }) => {
   };
 
   const handleMinBudgetChange = (e) => {
-    setMinBudget(e.target.value);
+    const value = e.target.value;
+    setMinBudget(value);
   };
 
   const handleMaxBudgetChange = (e) => {
-    setMaxBudget(e.target.value);
+    const value = e.target.value;
+    setMaxBudget(value);
   };
 
-<<<<<<< HEAD
-  const filteredProperties = properties.filter(
-    (property) =>
-      property.place.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      property.price >= parseFloat(minBudget) &&
-      property.price <= parseFloat(maxBudget)
-=======
-  const filteredProperties = properties.filter((property) =>
-    property.place.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    property.price >= parseFloat(minBudget) &&
-    property.price <= parseFloat(maxBudget)
->>>>>>> 0a62f07448226c919e3e8ed808f4f15268ac5446
-  );
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  // Apply filtering based on search query and budget
+  const filteredProperties = properties
+    .filter(
+      (property) =>
+        property.place.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        property.price >= parseFloat(minBudget) &&
+        property.price <= parseFloat(maxBudget)
+    )
+    .sort((a, b) => {
+      if (sortOption === "low-to-high") {
+        return a.price - b.price;
+      } else if (sortOption === "high-to-low") {
+        return b.price - a.price;
+      }
+      return 0;
+    });
 
   return (
     <div>
       <section className="hero-userpage">
         <img
-          src="https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          //src="https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          src={house2}
           alt="House"
           className="hero-image-userpage"
         />
@@ -72,8 +84,8 @@ const UserPage = ({ setUsername }) => {
           </p>
         </div>
       </section>
-      <br></br>
-      <br></br>
+      <br />
+      <br />
 
       <div className="search-container-userpage">
         <input
@@ -83,48 +95,84 @@ const UserPage = ({ setUsername }) => {
           onChange={handleSearchChange}
           className="search-box"
         />
+      
         <div className="budget-container">
-          <label>Min Budget: ${minBudget}</label>
-          <input
-            type="range"
-            min="0"
-            max="1000000"
-            step="1000"
-            value={minBudget}
-            onChange={handleMinBudgetChange}
-            className="budget-slider"
-          />
-          <label>Max Budget: ${maxBudget}</label>
-          <input
-            type="range"
-            min="0"
-            max="10000000"
-            step="1000"
-            value={maxBudget}
-            onChange={handleMaxBudgetChange}
-            className="budget-slider"
-          />
+          
+          <div>
+            <label>Min Budget: ${minBudget}</label>
+            <input
+              type="number"
+              value={minBudget}
+              onChange={handleMinBudgetChange}
+              min="0"
+              max="1000000"
+              step="1000"
+              className="budget-input"
+            />
+            <input
+              type="range"
+              min="0"
+              max="1000000"
+              step="1000"
+              value={minBudget}
+              onChange={handleMinBudgetChange}
+              className="budget-slider"
+            />
+          </div>
+
+          
+          <div>
+            <label>Max Budget: ${maxBudget}</label>
+            <input
+              type="number"
+              value={maxBudget}
+              onChange={handleMaxBudgetChange}
+              min="0"
+              max="10000000"
+              step="1000"
+              className="budget-input"
+            />
+            <input
+              type="range"
+              min="0"
+              max="10000000"
+              step="1000"
+              value={maxBudget}
+              onChange={handleMaxBudgetChange}
+              className="budget-slider"
+            />
+          </div>
+        </div>
+
+        
+        <div className="sort-container">
+          <label>Sort by Price: </label>
+          <select value={sortOption} onChange={handleSortChange} className="sort-dropdown">
+            <option value="">Select</option>
+            <option value="low-to-high">Low to High</option>
+            <option value="high-to-low">High to Low</option>
+          </select>
         </div>
       </div>
-      <br></br>
-      <br></br>
+      <br />
+      <br />
 
       <div className="card-container-userpage">
         {filteredProperties.map((property) => (
           <Card
             key={property.house_no}
             houseno={property.house_no}
-            image={`http://localhost:8081/images/${property.image}`}
+            image={`http://localhost:8081/images/${property.image1}`}
             place={property.place}
             price={property.price}
             className="card-item-userpage"
           />
         ))}
       </div>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

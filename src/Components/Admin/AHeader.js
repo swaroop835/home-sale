@@ -12,11 +12,6 @@ function AHeader({ toggleSidebar }) {
         {/* <BsSearch className='icon' /> */}
         Dream Homes
       </div>
-      {/* <div className='admin-header-right'>
-        <BsFillBellFill className='icon' />
-        <BsFillEnvelopeFill className='icon' />
-        <BsPersonCircle className='icon' />
-      </div> */}
     </header>
   );
 }

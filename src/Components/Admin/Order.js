@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Order.css";
+import "./Order.css"; // Import the CSS file for styling
  
 const Order = () => {
   const [bookings, setBookings] = useState([]);
@@ -8,7 +8,9 @@ const Order = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [currentBooking, setCurrentBooking] = useState(null);
-  const [bookingToDelete, setBookingToDelete] = useState(null);
+  const [bookingToDelete, setBookingToDelete] = useState(null); // State to manage booking to be deleted
+  const [propertyDetails, setPropertyDetails] = useState(null); // State to store property details for the modal
+  const [showPropertyModal, setShowPropertyModal] = useState(false); // State to show/hide property modal
  
   useEffect(() => {
     const fetchBookings = async () => {
@@ -52,7 +54,7 @@ const Order = () => {
   const confirmDelete = async () => {
     if (bookingToDelete) {
       try {
-        await axios.delete(`http://localhost:8081/deleteBooking`, {
+        await axios.delete("http://localhost:8081/deleteBooking", {
           data: { username: bookingToDelete.username },
         });
         setBookings((prevBookings) =>
@@ -88,7 +90,10 @@ const Order = () => {
         await axios.post("http://localhost:8081/updateBookingReason", {
           username: currentBooking.username,
           reason: modalContent,
-          status: "Disapproved",
+        });
+ 
+        await axios.post("http://localhost:8081/disapproveBooking", {
+          username: currentBooking.username,
         });
  
         setBookings((prevBookings) =>
@@ -104,6 +109,24 @@ const Order = () => {
         console.error("Error updating booking reason:", error);
       }
     }
+  };
+ 
+  // Fetch and show property details when house number is clicked
+  const handleShowPropertyModal = async (house_no) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8081/getPropertyDetails/${house_no}`
+      );
+      setPropertyDetails(response.data);
+      setShowPropertyModal(true);
+    } catch (error) {
+      console.error("Error fetching property details:", error);
+    }
+  };
+ 
+  const closePropertyModal = () => {
+    setShowPropertyModal(false);
+    setPropertyDetails(null);
   };
  
   return (
@@ -130,40 +153,72 @@ const Order = () => {
             bookings.map((booking) => (
               <tr key={`${booking.username}-${booking.house_no}`}>
                 <td>{booking.username}</td>
-                <td>{booking.house_no}</td>
+                <td>
+                  <button
+                    className="house-no-button"
+                    onClick={() => handleShowPropertyModal(booking.house_no)}
+                  >
+                    <b>{booking.house_no}</b>
+                  </button>
+                </td>
                 <td>{new Date(booking.booking_date).toLocaleDateString()}</td>
                 <td>{booking.time_slot}</td>
                 <td>{booking.reason}</td>
                 <td>{booking.status}</td>
-                <div className="table-buttons-container">
-                  <td>
-                    <button
-                      className="approve-button"
-                      onClick={() => handleApprove(booking.username)}
-                      disabled={booking.status === "Approved"}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="disapprove-button"
-                      onClick={() => handleDisapprove(booking)}
-                      disabled={booking.status === "Disapproved"}
-                    >
-                      Disapprove
-                    </button>
-                    <button
-                      className="deletebutton"
-                      onClick={() => handleDelete(booking)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </div>
+                <td>
+                  <button
+                    className="approve-button"
+                    onClick={() => handleApprove(booking.username)}
+                    disabled={booking.status === "Approved"}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="disapprove-button"
+                    onClick={() => handleDisapprove(booking)}
+                    disabled={booking.status === "Disapproved"}
+                  >
+                    Disapprove
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(booking)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))
           )}
         </tbody>
       </table>
+ 
+      {/* Property Modal */}
+      {showPropertyModal && propertyDetails && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Property Details</h2>
+            <img
+              src={`http://localhost:8081/images/${propertyDetails.image1}`} // Backend sends image1 field, this should work
+              alt={propertyDetails.place}
+              className="property-image"
+            />
+            <p>
+              <strong>Place:</strong> {propertyDetails.place}
+            </p>
+            <p>
+              <strong>District:</strong> {propertyDetails.district}
+            </p>
+            <p>
+              <strong>Price:</strong> {propertyDetails.price}
+            </p>
+ 
+            <button className="btn-close" onClick={closePropertyModal}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
  
       {/* Confirmation Modal */}
       {showConfirmModal && (
@@ -183,7 +238,7 @@ const Order = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>Update Booking Reason</h2>
+            <h2>Reason for Disapprove</h2>
             <textarea
               value={modalContent}
               onChange={handleModalChange}

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AddProperty.css";
-
+ 
 const AddProperty = ({ initialFormData, onCancel }) => {
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState({
+    image1: null,
+    image2: null,
+    image3: null,
+  });
+ 
   const [formData, setFormData] = useState({
     house_no: "",
     place: "",
@@ -17,11 +22,15 @@ const AddProperty = ({ initialFormData, onCancel }) => {
     price: "",
     ...initialFormData, // Populate form data with initial values for editing
   });
-
-  const handleFile = (e) => {
-    setFile(e.target.files[0]);
+ 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      [name]: files[0], // Set the file for the respective image input
+    }));
   };
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -29,22 +38,28 @@ const AddProperty = ({ initialFormData, onCancel }) => {
       [name]: value,
     }));
   };
-
+ 
   const handleUpload = (e) => {
     e.preventDefault();
     const formdata = new FormData();
-    formdata.append("image", file);
+ 
+    // Append each image to the form data
+    formdata.append("image1", files.image1);
+    formdata.append("image2", files.image2);
+    formdata.append("image3", files.image3);
+ 
+    // Append other form data
     for (const key in formData) {
       formdata.append(key, formData[key]);
     }
-
+ 
     // Determine whether to use POST (add new) or PUT (update existing)
     const apiUrl = initialFormData
       ? `http://localhost:8081/updateProperty/${initialFormData.house_no}`
       : "http://localhost:8081/AddProperty";
-
+ 
     const axiosMethod = initialFormData ? axios.put : axios.post;
-
+ 
     axiosMethod(apiUrl, formdata)
       .then((res) => {
         console.log(res);
@@ -60,7 +75,11 @@ const AddProperty = ({ initialFormData, onCancel }) => {
           description: "",
           price: "",
         });
-        setFile(null);
+        setFiles({
+          image1: null,
+          image2: null,
+          image3: null,
+        });
         alert(
           initialFormData
             ? "Property updated successfully!"
@@ -72,23 +91,35 @@ const AddProperty = ({ initialFormData, onCancel }) => {
         alert("Error adding/updating property. Please try again.");
       });
   };
-
+ 
   useEffect(() => {
     if (initialFormData) {
       setFormData(initialFormData); // Set form data for editing
     }
   }, [initialFormData]);
-
+ 
   return (
     <div className="add-property-page">
       <div className="add-property-container">
         <h2>{initialFormData ? "Edit Property" : "Add Property"}</h2>
         <form onSubmit={handleUpload}>
           <div className="input-add-property">
-            <label>Property Image</label>
-            <input type="file" onChange={handleFile} />
+            <label>Property Image 1 (Front View)</label>
+            <input type="file" name="image1" onChange={handleFileChange} />
           </div>
-
+ 
+          <div className="input-add-property">
+            <label>Property Image 2 (Back View)</label>
+            <input type="file" name="image2" onChange={handleFileChange} />
+          </div>
+ 
+          <div className="input-add-property">
+            <label>Property Image 3 (Interior View)</label>
+            <input type="file" name="image3" onChange={handleFileChange} />
+          </div>
+ 
+          {/* Other input fields remain the same */}
+ 
           <div className="input-add-property">
             <label>House No</label>
             <input
@@ -98,7 +129,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>Place</label>
             <input
@@ -108,7 +139,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>District</label>
             <input
@@ -118,7 +149,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>Bedroom</label>
             <input
@@ -128,7 +159,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>Bathroom</label>
             <input
@@ -138,7 +169,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>Square Feet</label>
             <input
@@ -148,7 +179,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>Status</label>
             <select
@@ -163,7 +194,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               </option>
             </select>
           </div>
-
+ 
           <div className="input-add-property">
             <label>Furnishing</label>
             <select
@@ -176,7 +207,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               <option value="Semi-Furnished">Semi-Furnished</option>
             </select>
           </div>
-
+ 
           <div className="input-add-property">
             <label>Description</label>
             <textarea
@@ -185,7 +216,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="input-add-property">
             <label>Price</label>
             <input
@@ -195,7 +226,7 @@ const AddProperty = ({ initialFormData, onCancel }) => {
               onChange={handleChange}
             />
           </div>
-
+ 
           <div className="button-add-property">
             <button type="submit">{initialFormData ? "Update" : "Add"}</button>
             {initialFormData && (
@@ -209,5 +240,5 @@ const AddProperty = ({ initialFormData, onCancel }) => {
     </div>
   );
 };
-
+ 
 export default AddProperty;

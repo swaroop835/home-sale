@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./PropertyDetails.css";
-import LoginModal from "./LoginModal"; // Import the LoginModal component
-
+import "./PropertyDetails.css"; // Import the CSS file for styling
+ 
 const PropertyDetails = () => {
   const id = localStorage.getItem("house_no");
   const [property, setProperty] = useState(null);
@@ -12,47 +11,45 @@ const PropertyDetails = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-
+  const [error, setError] = useState(null);
+ 
   useEffect(() => {
     const fetchProperty = async () => {
-      const username = localStorage.getItem("username");
-
-      // if (!username) {
-      //   setShowLoginModal(true); // Show the login modal if the user is not logged in
-      //   return;
-      // }
-
       try {
         const response = await axios.get("http://localhost:8081/getProperty", {
           params: { house_no: id },
         });
         console.log(response);
-        setProperty(response.data[0]);
+        if (response.data.length > 0) {
+          setProperty(response.data[0]);
+        } else {
+          setError("Property not found.");
+        }
       } catch (error) {
         console.error("Error fetching property details:", error);
+        setError("Error fetching property details.");
       }
     };
-
+ 
     fetchProperty();
   }, [id]);
-
+ 
   const handleBuyClick = () => {
     setShowPopup(true);
   };
-
+ 
   const handleTimeSlotChange = (event) => {
     setSelectedTimeSlot(event.target.value);
   };
-
+ 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
+ 
   const handleConfirmClick = () => {
     axios
       .post("http://localhost:8081/bookProperty", {
-        username: localStorage.getItem("username"),
+        username: localStorage.getItem("username"), // Ensure you have stored username
         house_no: id,
         booking_date: selectedDate,
         time_slot: selectedTimeSlot,
@@ -65,31 +62,50 @@ const PropertyDetails = () => {
         console.error("Error booking property:", error);
       });
   };
-
+ 
   const handleCancelClick = () => {
     setShowPopup(false);
   };
-
+ 
   const handleConfirmationClose = () => {
     setBookingConfirmed(false);
   };
-
-  const handleCloseLoginModal = () => {
-    setShowLoginModal(false);
-  };
-
+ 
+  if (error) {
+    return <div>{error}</div>;
+  }
+ 
   if (!property) {
-    //  return <LoginModal show={showLoginModal} onClose={handleCloseLoginModal} />;
-    return <div>Login</div>;
-  }
+    return <div>Loading...</div>;
+  }
+ 
   return (
     <div className="property-details">
       <h1>{property.name}</h1>
-      <img
-        src={"http://localhost:8081/images/" + property.image}
-        alt={property.name}
-        style={{ width: "auto", height: "700px" }}
-      />
+ 
+      {/* Displaying Image1, Image2, and Image3 */}
+      <div className="property-images">
+        <img
+          src={`http://localhost:8081/images/${property.image1}`}
+          alt={property.name}
+          style={{ width: "auto", height: "300px" }}
+        />
+        {property.image2 && (
+          <img
+            src={`http://localhost:8081/images/${property.image2}`}
+            alt={property.name}
+            style={{ width: "auto", height: "300px" }}
+          />
+        )}
+        {property.image3 && (
+          <img
+            src={`http://localhost:8081/images/${property.image3}`}
+            alt={property.name}
+            style={{ width: "auto", height: "300px" }}
+          />
+        )}
+      </div>
+ 
       <p>
         <strong>Description:</strong> {property.description}
       </p>
@@ -120,7 +136,7 @@ const PropertyDetails = () => {
       <button className="buy-button" onClick={handleBuyClick}>
         Book
       </button>
-
+ 
       {showPopup && (
         <div className="popup">
           <div className="popup-content">
@@ -151,7 +167,7 @@ const PropertyDetails = () => {
           </div>
         </div>
       )}
-
+ 
       {bookingConfirmed && (
         <div className="confirmation-popup">
           <div className="confirmation-popup-content">
@@ -175,5 +191,5 @@ const PropertyDetails = () => {
     </div>
   );
 };
-
+ 
 export default PropertyDetails;
