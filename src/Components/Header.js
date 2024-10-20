@@ -47,6 +47,7 @@ const Header = () => {
           <Card
             key={property.house_no}
             image={`http://localhost:8081/images/${property.image1}`}
+            description={property.description}
             place={property.place}
             price={property.price}
           />
@@ -55,5 +56,4 @@ const Header = () => {
     </div>
   );
 };
- 
 export default Header;

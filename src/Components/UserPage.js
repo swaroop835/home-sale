@@ -163,6 +163,7 @@ const UserPage = ({ setUsername }) => {
             key={property.house_no}
             houseno={property.house_no}
             image={`http://localhost:8081/images/${property.image1}`}
+            description={property.description}
             place={property.place}
             price={property.price}
             className="card-item-userpage"

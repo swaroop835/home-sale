@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./PropertyDetails.css"; // Import the CSS file for styling
- 
+
 const PropertyDetails = () => {
   const id = localStorage.getItem("house_no");
   const [property, setProperty] = useState(null);
@@ -12,7 +13,8 @@ const PropertyDetails = () => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [error, setError] = useState(null);
- 
+  const [showLoginModal, setShowLoginModal] = useState(false); // State to control login modal visibility
+
   useEffect(() => {
     const fetchProperty = async () => {
       try {
@@ -26,26 +28,28 @@ const PropertyDetails = () => {
           setError("Property not found.");
         }
       } catch (error) {
-        console.error("Error fetching property details:", error);
+        console.error("Error fetching property details: Please Login", error);
         setError("Error fetching property details.");
+        setShowLoginModal(true); // Show the login modal if an error occurs (e.g., user not logged in)
       }
     };
- 
+
     fetchProperty();
   }, [id]);
- 
+
   const handleBuyClick = () => {
     setShowPopup(true);
   };
- 
+  const navigate = useNavigate();
+
   const handleTimeSlotChange = (event) => {
     setSelectedTimeSlot(event.target.value);
   };
- 
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
- 
+
   const handleConfirmClick = () => {
     axios
       .post("http://localhost:8081/bookProperty", {
@@ -62,27 +66,55 @@ const PropertyDetails = () => {
         console.error("Error booking property:", error);
       });
   };
- 
+
   const handleCancelClick = () => {
     setShowPopup(false);
   };
- 
+
   const handleConfirmationClose = () => {
     setBookingConfirmed(false);
   };
- 
+
+  const handleLoginClick = () => {
+    // Navigate to the login page or handle login logic
+    window.location.href = "/login";
+  };
+
+  const handleCloseLoginModal = () => {
+    setShowLoginModal(false); 
+    navigate(-1);
+  };
+
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div>
+        {error}
+        {showLoginModal && (
+          <div className="login-modal">
+            <div className="login-modal-content">
+              <h2>Please Login to View Property</h2>
+              <p>You need to log in to access this property information.</p>
+              <button className="btn btn-primary" onClick={handleLoginClick}>
+                Login
+              </button>
+              <button className="close btn-primary" onClick={handleCloseLoginModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   }
- 
+
   if (!property) {
     return <div>Loading...</div>;
   }
- 
+
   return (
     <div className="property-details">
       <h1>{property.name}</h1>
- 
+
       {/* Displaying Image1, Image2, and Image3 */}
       <div className="property-images">
         <img
@@ -105,7 +137,7 @@ const PropertyDetails = () => {
           />
         )}
       </div>
- 
+
       <p>
         <strong>Description:</strong> {property.description}
       </p>
@@ -136,7 +168,7 @@ const PropertyDetails = () => {
       <button className="buy-button" onClick={handleBuyClick}>
         Book
       </button>
- 
+
       {showPopup && (
         <div className="popup">
           <div className="popup-content">
@@ -167,7 +199,7 @@ const PropertyDetails = () => {
           </div>
         </div>
       )}
- 
+
       {bookingConfirmed && (
         <div className="confirmation-popup">
           <div className="confirmation-popup-content">
@@ -191,5 +223,5 @@ const PropertyDetails = () => {
     </div>
   );
 };
- 
+
 export default PropertyDetails;
